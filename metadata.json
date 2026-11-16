@@ -1,0 +1,5 @@
+{
+  "name": "Remix AI Resume Tailor",
+  "description": "Tailor your resume to any job description using AI. Specifically designed for Muhammad Naveed\u0027s profile.",
+  "requestFramePermissions": ["clipboard-read"]
+}

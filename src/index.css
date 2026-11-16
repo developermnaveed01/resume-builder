@@ -1,0 +1,780 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply antialiased;
+  }
+}
+
+/* Markdown Styles for Resume Preview */
+.prose {
+  font-family: 'Inter', sans-serif;
+  color: #000000;
+  line-height: 1.4;
+}
+
+.prose h1 {
+  color: var(--heading-color, #2563eb); /* Professional blue default */
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.1rem;
+  text-align: left;
+  letter-spacing: -0.01em;
+}
+
+/* Section Headers */
+.prose h2 {
+  color: var(--heading-color, #2563eb);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 0.1rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 4px;
+}
+
+/* Experience Header: Title and Company */
+.prose h3 {
+  color: #111827;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.prose h3 strong:last-child {
+  text-transform: none;
+}
+
+/* Experience Sub-header: Location and Date */
+.prose h4 {
+  font-size: 0.85rem;
+  font-weight: 400;
+  font-style: normal;
+  margin-bottom: 0.1rem;
+  display: flex;
+  justify-content: space-between;
+  color: #666666;
+}
+
+.resume-date {
+  font-style: normal;
+  font-weight: 400;
+  color: #000000;
+}
+
+.prose p {
+  color: #374151;
+  font-size: 0.85rem;
+  margin-bottom: 0.1rem;
+  line-height: 1.5;
+}
+
+.prose ul {
+  list-style-type: disc;
+  margin-left: 1.25rem;
+  padding-left: 0;
+  margin-bottom: 0.6rem;
+}
+
+.prose li {
+  color: #374151;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.5;
+}
+
+.prose li::marker {
+  color: var(--heading-color, #2563eb);
+}
+
+/* Contact info styling - Bulleted List */
+.prose ul:first-of-type {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.prose ul:first-of-type li {
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.prose ul:first-of-type li::before {
+  content: none;
+}
+
+
+#resume-content {
+  width: 928px; /* 8.5in at 96dpi */
+  min-height: 1056px; /* 11in at 96dpi */
+  margin: 0 auto;
+  padding: 20px 40px;
+  background: white;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+@media print {
+  #resume-content {
+    width: 100% !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Template Styles */
+.template-modern {
+  font-family: 'Inter', sans-serif;
+}
+
+.template-classic {
+  font-family: 'Georgia', serif;
+}
+
+.template-classic h1 {
+  text-align: center !important;
+  font-family: 'Georgia', serif;
+  border-bottom: none !important;
+}
+
+.template-classic ul:first-of-type {
+  justify-content: center !important;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-bottom: 1.5rem !important;
+}
+
+.template-classic h2 {
+  border-bottom: 2px solid #333 !important;
+  text-align: center;
+  margin-top: 1.5rem !important;
+}
+
+.template-minimal {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.3;
+}
+
+.template-minimal h1 {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #333 !important;
+}
+
+.template-minimal h2 {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  color: #444 !important;
+  margin-top: 1rem !important;
+}
+
+/* Template: Executive (Based on user screenshot) */
+.template-executive {
+  font-family: 'Georgia', serif !important;
+  padding: 0.4in 0.6in !important;
+  color: #333 !important;
+}
+
+.template-executive h1 {
+  text-align: center !important;
+  font-size: 24pt !important;
+  margin-bottom: 0.25rem !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: none !important;
+}
+
+.template-executive .contact-info {
+  text-align: center !important;
+  font-size: 9pt !important;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.template-executive h2 {
+  display: flex !important;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 11pt !important;
+  font-weight: bold !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+  border-bottom: none !important;
+  color: #333 !important;
+}
+
+.template-executive h2::after {
+  content: "";
+  flex: 1;
+  height: 0.5pt;
+  background: #ccc;
+  margin-left: 1rem;
+}
+
+/* Skills Container (Two independent columns without row-height gaps) */
+.skills-container {
+  display: flex !important;
+  gap: 1.75rem !important;
+  width: 100% !important;
+  margin-bottom: 0.6rem !important;
+}
+
+.skills-col {
+  flex: 1 1 50% !important;
+  min-width: 0 !important;
+}
+
+.skills-col ul {
+  list-style-type: disc !important;
+  padding-left: 1.25rem !important;
+  margin: 0 !important;
+}
+
+.skills-col li {
+  margin-bottom: 0.25rem !important;
+  font-size: 0.85rem;
+  line-height: 1.45 !important;
+}
+
+.template-executive .skills-container {
+  display: flex !important;
+  gap: 2rem !important;
+  width: 100% !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.template-executive .skills-col {
+  flex: 1 1 50% !important;
+  min-width: 0 !important;
+}
+
+.template-executive .skills-col ul {
+  list-style-type: disc !important;
+  padding-left: 1.2rem !important;
+  margin: 0 !important;
+  font-size: 9.5pt !important;
+  line-height: 1.4 !important;
+}
+
+.template-executive .skills-col li {
+  margin-bottom: 0.25rem !important;
+  color: #333 !important;
+}
+
+.template-executive .experience-item {
+  display: grid !important;
+  grid-template-columns: 200px 1fr !important;
+  gap: 2rem !important;
+  margin-bottom: 2rem !important;
+}
+
+.template-executive .experience-sidebar h3 {
+  font-size: 10pt !important;
+  font-weight: bold !important;
+  margin: 0 !important;
+  color: #333 !important;
+}
+
+.template-executive .experience-sidebar h4 {
+  font-size: 10pt !important;
+  font-weight: bold !important;
+  margin: 0.1rem 0 !important;
+  color: #333 !important;
+}
+
+.template-executive .experience-date {
+  font-size: 9pt;
+  font-style: italic;
+  color: #666;
+}
+
+.template-executive .experience-main ul {
+  list-style-type: disc !important;
+  padding-left: 1.2rem !important;
+  font-size: 9.5pt !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+}
+
+.template-executive .project-item {
+  display: grid !important;
+  grid-template-columns: 200px 1fr !important;
+  gap: 2rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.template-executive .project-header h3 {
+  font-size: 10pt !important;
+  font-weight: bold !important;
+  margin: 0 !important;
+  color: #333 !important;
+}
+
+.template-executive .project-main ul {
+  list-style-type: disc !important;
+  padding-left: 1.2rem !important;
+  font-size: 9.5pt !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+}
+
+/* Template: Double Column (Enhancv Multi-Column Style) */
+.template-double-column {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  color: #1a1a1a !important;
+  padding: 0.3in 0.4in !important;
+  line-height: 1.38 !important;
+}
+
+.template-double-column .dc-container {
+  width: 100% !important;
+}
+
+/* Header */
+.template-double-column .dc-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  margin-bottom: 0.85rem !important;
+  padding-bottom: 0.2rem !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.template-double-column .dc-header-left {
+  flex: 1 !important;
+}
+
+.template-double-column .dc-name {
+  font-size: 26pt !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  text-transform: uppercase !important;
+  color: #0a0a0a !important;
+  margin: 0 0 0.15rem 0 !important;
+  line-height: 1.1 !important;
+  border: none !important;
+}
+
+.template-double-column .dc-title {
+  font-size: 12pt !important;
+  font-weight: 700 !important;
+  color: var(--heading-color, #0284c7) !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.template-double-column .dc-contacts {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 0.4rem 1.1rem !important;
+  font-size: 8.5pt !important;
+  color: #4b5563 !important;
+}
+
+.template-double-column .dc-contact-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+}
+
+.template-double-column .dc-icon {
+  width: 13px !important;
+  height: 13px !important;
+  stroke: var(--heading-color, #0284c7) !important;
+  flex-shrink: 0 !important;
+}
+
+.template-double-column .dc-contacts a {
+  color: #4b5563 !important;
+  text-decoration: none !important;
+}
+
+.template-double-column .dc-contacts a:hover {
+  color: var(--heading-color, #0284c7) !important;
+  text-decoration: underline !important;
+}
+
+/* Two Columns Body */
+.template-double-column .dc-body {
+  display: flex !important;
+  gap: 1.75rem !important;
+  width: 100% !important;
+  align-items: flex-start !important;
+}
+
+.template-double-column .dc-col-main {
+  flex: 1 1 61% !important;
+  min-width: 0 !important;
+}
+
+.template-double-column .dc-col-side {
+  flex: 0 0 39% !important;
+  min-width: 0 !important;
+}
+
+/* Section Headings */
+.template-double-column .dc-sec-heading {
+  font-size: 10.5pt !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: #111827 !important;
+  border-bottom: 2px solid #111827 !important;
+  padding-bottom: 3px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0.55rem !important;
+  break-after: avoid !important;
+  page-break-after: avoid !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.template-double-column .dc-section {
+  margin-bottom: 0.95rem !important;
+  break-inside: auto !important;
+  page-break-inside: auto !important;
+}
+
+/* Summary */
+.template-double-column .dc-summary-text {
+  font-size: 8.5pt !important;
+  line-height: 1.42 !important;
+  color: #374151 !important;
+  margin: 0 !important;
+}
+
+/* Experience */
+.template-double-column .dc-exp-item {
+  margin-bottom: 0.75rem !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.template-double-column .dc-exp-title {
+  font-size: 9.8pt !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+  line-height: 1.25 !important;
+}
+
+.template-double-column .dc-exp-company {
+  font-size: 9.2pt !important;
+  font-weight: 700 !important;
+  color: var(--heading-color, #0284c7) !important;
+  margin-top: 1px !important;
+}
+
+.template-double-column .dc-exp-meta {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.75rem !important;
+  font-size: 8pt !important;
+  color: #6b7280 !important;
+  margin: 3px 0 6px 0 !important;
+}
+
+.template-double-column .dc-meta-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.25rem !important;
+}
+
+.template-double-column .dc-meta-icon {
+  width: 11px !important;
+  height: 11px !important;
+  stroke: #9ca3af !important;
+}
+
+/* Bullets */
+.template-double-column .dc-bullets {
+  list-style-type: disc !important;
+  padding-left: 1.15rem !important;
+  margin: 0 !important;
+}
+
+.template-double-column .dc-bullets li {
+  font-size: 8.2pt !important;
+  line-height: 1.38 !important;
+  color: #374151 !important;
+  margin-bottom: 0.22rem !important;
+}
+
+.template-double-column .dc-bullets li::marker {
+  color: #6b7280 !important;
+  font-size: 0.75em !important;
+}
+
+/* Education */
+.template-double-column .dc-edu-item {
+  margin-bottom: 0.55rem !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.template-double-column .dc-edu-degree {
+  font-size: 9.5pt !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+}
+
+.template-double-column .dc-edu-school {
+  font-size: 9pt !important;
+  font-weight: 700 !important;
+  color: var(--heading-color, #0284c7) !important;
+  margin-top: 1px !important;
+}
+
+.template-double-column .dc-edu-meta {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+  font-size: 8pt !important;
+  color: #6b7280 !important;
+  margin-top: 2px !important;
+}
+
+/* Skills Chips in Right Column */
+.template-double-column .dc-skill-group {
+  margin-bottom: 0.35rem !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.template-double-column .dc-skill-cat-title {
+  font-size: 8.5pt !important;
+  font-weight: 700 !important;
+  color: var(--heading-color, #0284c7) !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.template-double-column .dc-chips-container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.25rem !important;
+}
+
+.template-double-column .dc-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0.14rem 0.42rem !important;
+  font-size: 7.8pt !important;
+  line-height: 1.25 !important;
+  color: #1f2937 !important;
+  background-color: #f3f4f6 !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 3px !important;
+  font-weight: 500 !important;
+  white-space: normal !important;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.02) !important;
+}
+
+.template-double-column .dc-chip strong {
+  font-weight: 700 !important;
+  color: #111827 !important;
+}
+
+.template-double-column .dc-skill-divider {
+  border: 0 !important;
+  border-top: 1px dashed #e5e7eb !important;
+  margin: 0.35rem 0 !important;
+}
+
+/* Projects in Right Column */
+.template-double-column .dc-proj-item {
+  margin-bottom: 0.65rem !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.template-double-column .dc-proj-title {
+  font-size: 9.2pt !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+  margin-bottom: 0.2rem !important;
+}
+
+.template-double-column .dc-proj-title a {
+  color: var(--heading-color, #0284c7) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px !important;
+}
+
+.template-double-column .dc-proj-tech {
+  font-size: 8pt !important;
+  font-weight: 500 !important;
+  color: #6b7280 !important;
+}
+
+.template-double-column .dc-proj-desc {
+  font-size: 8pt !important;
+  line-height: 1.35 !important;
+  color: #4b5563 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.template-double-column .dc-proj-bullets {
+  padding-left: 1.1rem !important;
+}
+
+.template-double-column .dc-proj-bullets li {
+  font-size: 7.8pt !important;
+  line-height: 1.36 !important;
+  margin-bottom: 0.22rem !important;
+}
+
+/* Base structural styles */
+.project-item {
+  margin-bottom: 0.75rem;
+}
+
+.project-item h3 {
+  margin-bottom: 0.15rem;
+}
+
+.project-item .project-tech {
+  font-size: 0.85rem;
+  font-weight: normal;
+  color: #6b7280;
+}
+
+.resume-header h1 {
+  margin-top: 0 !important;
+}
+
+.contact-info p {
+  margin: 0 !important;
+}
+
+.experience-item h3, .experience-item h4 {
+  margin-bottom: 0 !important;
+}
+
+.template-minimal h3 {
+  font-size: 0.9rem !important;
+}
+
+@media print {
+  .template-classic h1 { font-size: 24pt !important; }
+  .template-classic h2 { font-size: 12pt !important; border-bottom: 1.5pt solid #333 !important; }
+  
+  .template-minimal h1 { font-size: 18pt !important; }
+  .template-minimal h2 { font-size: 10pt !important; }
+}
+
+.prose a {
+  color: #4a90e2;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose a:hover {
+  color: #003366;
+}
+
+.prose p:last-child,
+.prose ul:last-child {
+  margin-bottom: 0 !important;
+}
+
+@media print {
+  @page {
+    size: letter;
+    margin: 0.20in;
+  }
+
+  body {
+    background: white !important;
+  }
+
+  #resume-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    min-height: auto !important;
+    height: auto !important;
+  }
+
+  .prose h1 {
+    font-size: 22pt !important;
+    color: var(--heading-color, #2563eb) !important;
+  }
+
+  .prose h2 {
+    font-size: 11pt !important;
+    color: var(--heading-color, #2563eb) !important;
+    border-bottom: 1pt solid #e5e7eb !important;
+  }
+
+  .prose h3 {
+    font-size: 10pt !important;
+  }
+
+  .prose li {
+    font-size: 9pt !important;
+    color: #374151 !important;
+  }
+
+  /* Prevent page breaks inside individual items */
+  .prose p, 
+  .prose li, 
+  .prose h1, 
+  .prose h2, 
+  .prose h3, 
+  .prose h4,
+  .skills-col,
+  .dc-exp-item,
+  .dc-proj-item,
+  .dc-skill-group,
+  .dc-edu-item {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .skills-container {
+    display: flex !important;
+  }
+
+  .template-double-column {
+    padding: 0 !important;
+  }
+
+  .template-double-column .dc-section {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  .template-double-column .dc-sec-heading {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  .template-double-column .dc-body {
+    display: flex !important;
+    gap: 1.5rem !important;
+  }
+
+  .template-double-column .dc-col-main {
+    flex: 1 1 61% !important;
+  }
+
+  .template-double-column .dc-col-side {
+    flex: 0 0 39% !important;
+  }
+}
