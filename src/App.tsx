@@ -507,7 +507,7 @@ const generateMarkdownFromResume = (
 
 export default function App() {
   const [jobDescription, setJobDescription] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [parseError, setParseError] = useState<string | null>(null);
   const [currentResumeData, setCurrentResumeData] = useState<any>(BASE_RESUME);
   const [template, setTemplate] = useState('double-column');
   const [showLocation, setShowLocation] = useState(false);
@@ -515,16 +515,59 @@ export default function App() {
   const [generatedResume, setGeneratedResume] = useState<string | null>(
     generateMarkdownFromResume(BASE_RESUME, false, true, 'double-column')
   );
-  const [identifiedTitle, setIdentifiedTitle] = useState('Base_Resume');
+  const [identifiedTitle, setIdentifiedTitle] = useState('Naveed resume');
   const [copied, setCopied] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [headingColor, setHeadingColor] = useState('#0284c7');
   const [pasteStatus, setPasteStatus] = useState<'idle' | 'pasted' | 'cleared'>('idle');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const processJobDescription = (inputText: string) => {
+    const raw = inputText.trim();
+    if (!raw) {
+      setParseError(null);
+      return;
+    }
+
+    try {
+      let trimmedInput = raw;
+      if (!trimmedInput.startsWith('{') || !trimmedInput.endsWith('}')) {
+        const firstBrace = trimmedInput.indexOf('{');
+        const lastBrace = trimmedInput.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+          trimmedInput = trimmedInput.substring(firstBrace, lastBrace + 1);
+        }
+      }
+
+      if (trimmedInput.startsWith('{') && trimmedInput.endsWith('}')) {
+        const parsedObject = new Function(`return ${trimmedInput}`)();
+        if (parsedObject && typeof parsedObject === 'object') {
+          const fullResumeData = {
+            ...BASE_RESUME,
+            ...parsedObject
+          };
+          setCurrentResumeData(fullResumeData);
+          setIdentifiedTitle("Naveed resume");
+          setParseError(null);
+          return;
+        }
+      }
+
+      setParseError("Paste a valid resume object (starting with { and ending with }).");
+    } catch (error) {
+      console.error("Processing error:", error);
+      setParseError("Could not parse resume object. Please check the format.");
+    }
+  };
+
+  useEffect(() => {
+    processJobDescription(jobDescription);
+  }, [jobDescription]);
+
   const handlePasteFromClipboard = async () => {
     // 1. Always clear the job description box first
     setJobDescription('');
+    setParseError(null);
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.value = '';
@@ -607,58 +650,10 @@ export default function App() {
     { id: 'minimal', name: 'Minimal', desc: 'Sleek & Compact' }
   ];
 
-  const handleGenerate = async () => {
-    if (!jobDescription) return;
-    
-    setIsGenerating(true);
-    try {
-      // Check if the input is a JSON/JS object
-      let trimmedInput = jobDescription.trim();
-      
-      // If it doesn't start/end with braces, try to find the first { and last }
-      if (!trimmedInput.startsWith('{') || !trimmedInput.endsWith('}')) {
-        const firstBrace = trimmedInput.indexOf('{');
-        const lastBrace = trimmedInput.lastIndexOf('}');
-        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-          trimmedInput = trimmedInput.substring(firstBrace, lastBrace + 1);
-        }
-      }
-
-      if (trimmedInput.startsWith('{') && trimmedInput.endsWith('}')) {
-        try {
-          // Use Function constructor to parse JS objects that might not be strict JSON
-          const parsedObject = new Function(`return ${trimmedInput}`)();
-          
-          if (parsedObject && typeof parsedObject === 'object') {
-            // Merge with BASE_RESUME to ensure we have name, contact, and projects if not provided
-            const fullResumeData = {
-              ...BASE_RESUME,
-              ...parsedObject
-            };
-            
-            setCurrentResumeData(fullResumeData);
-            setIdentifiedTitle(parsedObject.title || (parsedObject.experience?.[0]?.title ? `${parsedObject.experience[0].title}_Tailored` : "Custom_Resume"));
-          } else {
-            throw new Error("Please paste a valid resume object (starting with { and ending with }).");
-          }
-        } catch (e) {
-          throw new Error("Failed to parse resume object. Please check the format.");
-        }
-      } else {
-        throw new Error("Please paste a valid resume object (starting with { and ending with }).");
-      }
-    } catch (error) {
-      console.error("Processing error:", error);
-      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred.";
-      setGeneratedResume(`### Error\n${errorMessage}\n\nPlease ensure you are pasting a valid resume object.`);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   const handleResetToBase = () => {
     setJobDescription('');
-    setIdentifiedTitle('Base_Resume');
+    setParseError(null);
+    setIdentifiedTitle('Naveed resume');
     setCurrentResumeData(BASE_RESUME);
   };
 
@@ -797,47 +792,20 @@ export default function App() {
         </div>
       </header>
 
-      <main className="w-full px-4 sm:px-6 py-4 print:p-0 print:m-0 print:max-w-none">
-        <div className="grid grid-cols-1 lg:grid-cols-[360px_minmax(0,1fr)] xl:grid-cols-[400px_minmax(0,1fr)] gap-5 items-start print:block">
+      <main className="w-full px-4 sm:px-5 py-4 print:p-0 print:m-0 print:max-w-none">
+        <div className="grid grid-cols-1 lg:grid-cols-[270px_minmax(0,1fr)_215px] xl:grid-cols-[310px_minmax(0,1fr)_230px] gap-4 items-start print:block">
           
-          {/* Left Column: All Controls */}
-          <aside className="space-y-3 lg:sticky lg:top-16 lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto lg:pr-1 print:hidden">
-            
-            {/* Job Description & Generate Card */}
+          {/* Left Column: Job Description Only */}
+          <aside className="lg:sticky lg:top-16 print:hidden">
             <div className="bg-white rounded-xl border border-zinc-200 p-4 shadow-sm">
               <div className="flex items-center justify-between gap-2 mb-2.5">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-sm font-semibold text-zinc-900">Job Description</h2>
-                  <button
-                    type="button"
-                    onClick={handlePasteFromClipboard}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg border transition-all active:scale-95 shadow-xs cursor-pointer bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-300"
-                    title="Empty the box and paste from clipboard"
-                  >
-                    {pasteStatus === 'pasted' ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span className="font-semibold">Pasted!</span>
-                      </>
-                    ) : pasteStatus === 'cleared' ? (
-                      <>
-                        <ClipboardPaste className="w-3.5 h-3.5 text-amber-600" />
-                        <span className="font-semibold">Cleared — Press Ctrl+V</span>
-                      </>
-                    ) : (
-                      <>
-                        <ClipboardPaste className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Paste from Clipboard</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-
+                <h2 className="text-sm font-semibold text-zinc-900">Job Description</h2>
                 {jobDescription && (
                   <button
                     type="button"
                     onClick={() => {
                       setJobDescription('');
+                      setParseError(null);
                       if (textareaRef.current) {
                         textareaRef.current.value = '';
                         textareaRef.current.focus();
@@ -852,161 +820,57 @@ export default function App() {
                 )}
               </div>
 
+              <button
+                type="button"
+                onClick={handlePasteFromClipboard}
+                className="w-full mb-2.5 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-all active:scale-[0.98] shadow-xs cursor-pointer bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-300"
+                title="Empty the box and paste from clipboard"
+              >
+                {pasteStatus === 'pasted' ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="font-semibold">Pasted &amp; Applied!</span>
+                  </>
+                ) : pasteStatus === 'cleared' ? (
+                  <>
+                    <ClipboardPaste className="w-3.5 h-3.5 text-amber-600" />
+                    <span className="font-semibold">Cleared — Press Ctrl+V</span>
+                  </>
+                ) : (
+                  <>
+                    <ClipboardPaste className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Paste from Clipboard</span>
+                  </>
+                )}
+              </button>
+
               {pasteStatus === 'cleared' && (
                 <p className="mb-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5">
                   Box cleared. If your browser blocked automatic clipboard read, press Ctrl+V (or Cmd+V) to paste.
                 </p>
               )}
 
-              <div className="space-y-2.5">
-                <textarea
-                  id="jobDescription"
-                  ref={textareaRef}
-                  rows={5}
-                  placeholder="Paste the resume object or job description here..."
-                  value={jobDescription}
-                  onChange={(e) => setJobDescription(e.target.value)}
-                  className="w-full px-3 py-2 text-sm bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all resize-y"
-                />
+              {parseError && (
+                <p className="mb-2 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-2.5 py-1.5">
+                  {parseError}
+                </p>
+              )}
 
-                <button
-                  onClick={handleGenerate}
-                  disabled={isGenerating || !jobDescription}
-                  className={cn(
-                    "w-full py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer",
-                    isGenerating || !jobDescription
-                      ? "bg-zinc-100 text-zinc-400 cursor-not-allowed shadow-none"
-                      : "bg-emerald-600 text-white hover:bg-emerald-700 active:scale-[0.98] shadow-emerald-200"
-                  )}
-                >
-                  {isGenerating ? 'Analyzing & Tailoring...' : 'Generate Tailored Resume'}
-                </button>
-              </div>
-            </div>
-
-            {/* Resume Actions & Customization Card */}
-            {generatedResume && (
-              <div className="bg-white rounded-xl border border-zinc-200 p-4 shadow-sm space-y-3">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                    <span className="text-xs font-semibold text-zinc-600 uppercase tracking-wider truncate">
-                      {identifiedTitle ? identifiedTitle : 'Preview'}
-                    </span>
-                  </div>
-                  <button
-                    onClick={handleResetToBase}
-                    className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-zinc-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer shrink-0"
-                    title="Reset to Base Resume"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Reset</span>
-                  </button>
-                </div>
-
-                {/* Export Actions */}
-                <div className="grid grid-cols-3 gap-2">
-                  <button
-                    onClick={handlePrint}
-                    className="inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-zinc-700 bg-zinc-100 rounded-lg hover:bg-zinc-200 transition-colors cursor-pointer"
-                  >
-                    <Printer className="w-3.5 h-3.5" />
-                    <span>Print</span>
-                  </button>
-                  <button
-                    onClick={handleDownloadPDF}
-                    disabled={isExporting}
-                    className="inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-zinc-700 bg-zinc-100 rounded-lg hover:bg-zinc-200 transition-colors disabled:opacity-50 cursor-pointer"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>{isExporting ? '...' : 'PDF'}</span>
-                  </button>
-                  <button
-                    onClick={handleCopy}
-                    className="inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors cursor-pointer"
-                  >
-                    {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span>{copied ? 'Copied' : 'Copy'}</span>
-                  </button>
-                </div>
-
-                {/* Theme & Visibility Toggles */}
-                <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-zinc-100">
-                  <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200 rounded-lg px-2.5 py-1">
-                    <span className="text-[11px] font-medium text-zinc-500 uppercase tracking-tight">Theme</span>
-                    <input 
-                      type="color" 
-                      value={headingColor} 
-                      onChange={(e) => setHeadingColor(e.target.value)}
-                      className="w-5 h-5 rounded cursor-pointer border-none p-0 bg-transparent"
-                      title="Choose Heading Color"
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      onClick={() => setShowPhone(!showPhone)}
-                      className={cn(
-                        "px-2.5 py-1.5 rounded-lg transition-all text-xs font-medium flex items-center gap-1 cursor-pointer",
-                        showPhone 
-                          ? "text-emerald-700 bg-emerald-50 hover:bg-emerald-100" 
-                          : "text-zinc-500 bg-zinc-100 hover:bg-zinc-200"
-                      )}
-                      title={showPhone ? "Hide Phone" : "Show Phone"}
-                    >
-                      {showPhone ? <Phone className="w-3.5 h-3.5" /> : <PhoneOff className="w-3.5 h-3.5" />}
-                      <span>Phone</span>
-                    </button>
-                    <button
-                      onClick={() => setShowLocation(!showLocation)}
-                      className={cn(
-                        "px-2.5 py-1.5 rounded-lg transition-all text-xs font-medium flex items-center gap-1 cursor-pointer",
-                        showLocation 
-                          ? "text-emerald-700 bg-emerald-50 hover:bg-emerald-100" 
-                          : "text-zinc-500 bg-zinc-100 hover:bg-zinc-200"
-                      )}
-                      title={showLocation ? "Hide Location" : "Show Location"}
-                    >
-                      {showLocation ? <MapPin className="w-3.5 h-3.5" /> : <MapPinOff className="w-3.5 h-3.5" />}
-                      <span>Location</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Compact Template Selector */}
-            <div className="bg-white rounded-xl border border-zinc-200 p-4 shadow-sm">
-              <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2.5">
-                Template
-              </h2>
-              <div className="flex flex-wrap gap-1.5">
-                {templates.map((t) => (
-                  <button
-                    key={t.id}
-                    onClick={() => setTemplate(t.id)}
-                    className={cn(
-                      "px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer",
-                      template === t.id
-                        ? "border-emerald-500 bg-emerald-50 text-emerald-700 shadow-xs"
-                        : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50"
-                    )}
-                  >
-                    {t.name}
-                  </button>
-                ))}
-              </div>
+              <textarea
+                id="jobDescription"
+                ref={textareaRef}
+                rows={16}
+                placeholder="Paste the tailored resume object here — it updates the resume automatically..."
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                className="w-full px-3 py-2 text-xs font-mono bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all resize-y"
+              />
             </div>
           </aside>
 
-          {/* Right Column: Resume Preview */}
+          {/* Center Column: Resume Preview */}
           <section className="min-w-0 print:block">
-            {isGenerating ? (
-              <div className="bg-white rounded-2xl border border-zinc-200 shadow-sm min-h-[700px] flex flex-col items-center justify-center space-y-4 print:hidden">
-                <div className="w-12 h-12 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin" />
-                <p className="text-zinc-500 animate-pulse">AI is identifying the role and tailoring your resume...</p>
-              </div>
-            ) : generatedResume ? (
+            {generatedResume && (
               <div className="overflow-x-auto pb-4 print:overflow-visible print:pb-0">
                 <div 
                   id="resume-content" 
@@ -1023,8 +887,144 @@ export default function App() {
                   <Markdown rehypePlugins={[rehypeRaw]}>{generatedResume}</Markdown>
                 </div>
               </div>
-            ) : null}
+            )}
           </section>
+
+          {/* Right Column: Print at Top Right + All Other Controls Vertically Aligned */}
+          <aside className="space-y-3 lg:sticky lg:top-16 lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto print:hidden">
+            {generatedResume && (
+              <div className="bg-white rounded-xl border border-zinc-200 p-3.5 shadow-sm flex flex-col gap-2.5">
+                {/* Print button at top right side of the resume */}
+                <button
+                  onClick={handlePrint}
+                  className="w-full py-2.5 px-3 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 bg-emerald-600 text-white hover:bg-emerald-700 active:scale-[0.98] transition-all shadow-sm shadow-emerald-200 cursor-pointer"
+                >
+                  <Printer className="w-4 h-4" />
+                  <span>Print</span>
+                </button>
+
+                <div className="flex items-center gap-2 px-1 pt-0.5">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                  <span className="text-xs font-semibold text-zinc-600 uppercase tracking-wider truncate">
+                    {identifiedTitle ? identifiedTitle : 'Preview'}
+                  </span>
+                </div>
+
+                {/* Vertical Actions */}
+                <div className="flex flex-col gap-1.5">
+                  <button
+                    onClick={handleDownloadPDF}
+                    disabled={isExporting}
+                    className="w-full inline-flex items-center justify-between px-3 py-2 text-xs font-semibold text-zinc-700 bg-zinc-100 rounded-lg hover:bg-zinc-200 transition-colors disabled:opacity-50 cursor-pointer"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <Download className="w-3.5 h-3.5" />
+                      <span>{isExporting ? 'Exporting...' : 'Download PDF'}</span>
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={handleCopy}
+                    className="w-full inline-flex items-center justify-between px-3 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors cursor-pointer"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{copied ? 'Copied!' : 'Copy'}</span>
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={handleResetToBase}
+                    className="w-full inline-flex items-center justify-between px-3 py-2 text-xs font-medium text-zinc-600 bg-zinc-50 border border-zinc-200 rounded-lg hover:text-emerald-700 hover:bg-emerald-50 hover:border-emerald-200 transition-colors cursor-pointer"
+                    title="Reset to Base Resume"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Reset</span>
+                    </span>
+                  </button>
+                </div>
+
+                {/* Vertical Display Toggles */}
+                <div className="flex flex-col gap-1.5 pt-2 border-t border-zinc-100">
+                  <label className="w-full flex items-center justify-between bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-1.5 cursor-pointer">
+                    <span className="text-xs font-medium text-zinc-600">Theme Color</span>
+                    <input 
+                      type="color" 
+                      value={headingColor} 
+                      onChange={(e) => setHeadingColor(e.target.value)}
+                      className="w-5 h-5 rounded cursor-pointer border-none p-0 bg-transparent"
+                      title="Choose Heading Color"
+                    />
+                  </label>
+
+                  <button
+                    onClick={() => setShowPhone(!showPhone)}
+                    className={cn(
+                      "w-full px-3 py-2 rounded-lg transition-all text-xs font-medium flex items-center justify-between cursor-pointer",
+                      showPhone 
+                        ? "text-emerald-700 bg-emerald-50 hover:bg-emerald-100" 
+                        : "text-zinc-500 bg-zinc-100 hover:bg-zinc-200"
+                    )}
+                    title={showPhone ? "Hide Phone" : "Show Phone"}
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      {showPhone ? <Phone className="w-3.5 h-3.5" /> : <PhoneOff className="w-3.5 h-3.5" />}
+                      <span>Phone</span>
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider font-semibold">
+                      {showPhone ? 'On' : 'Off'}
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowLocation(!showLocation)}
+                    className={cn(
+                      "w-full px-3 py-2 rounded-lg transition-all text-xs font-medium flex items-center justify-between cursor-pointer",
+                      showLocation 
+                        ? "text-emerald-700 bg-emerald-50 hover:bg-emerald-100" 
+                        : "text-zinc-500 bg-zinc-100 hover:bg-zinc-200"
+                    )}
+                    title={showLocation ? "Hide Location" : "Show Location"}
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      {showLocation ? <MapPin className="w-3.5 h-3.5" /> : <MapPinOff className="w-3.5 h-3.5" />}
+                      <span>Location</span>
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider font-semibold">
+                      {showLocation ? 'On' : 'Off'}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Vertical Template Selector */}
+            <div className="bg-white rounded-xl border border-zinc-200 p-3.5 shadow-sm">
+              <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">
+                Template
+              </h2>
+              <div className="flex flex-col gap-1.5">
+                {templates.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => setTemplate(t.id)}
+                    className={cn(
+                      "w-full text-left px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer flex items-center justify-between",
+                      template === t.id
+                        ? "border-emerald-500 bg-emerald-50 text-emerald-700 shadow-xs"
+                        : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50"
+                    )}
+                  >
+                    <span>{t.name}</span>
+                    {template === t.id && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </aside>
 
         </div>
       </main>

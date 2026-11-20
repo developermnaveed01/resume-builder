@@ -15,22 +15,85 @@ export const BASE_RESUME = {
   },
 
   professionalSummary:
-    "Senior Full Stack Engineer and Team Lead with <span class='bold'>6+ years</span> of experience building <span class='bold'>React</span> and <span class='bold'>TypeScript</span> applications with <span class='bold'>Node.js</span> backends on AWS. Currently lead a team shipping production AI features, including <span class='bold'>agentic AI</span> workflows, <span class='bold'>LLM API</span> integrations (OpenAI, Anthropic), <span class='bold'>RAG</span>, and <span class='bold'>tool/function calling</span>, backed by evaluation, guardrails, and cost/latency monitoring. Experienced in service-to-service API design, <span class='bold'>CI/CD</span>, and Agile/Scrum delivery in remote, cross-functional teams.",
+    "Senior Full Stack and Lead Software Engineer with <span class='bold'>6+ years</span> of experience building <span class='bold'>React</span> and <span class='bold'>TypeScript</span> applications with <span class='bold'>Node.js</span> backends on AWS. Currently lead a team shipping production AI features, including <span class='bold'>agentic AI</span> workflows, <span class='bold'>LLM API</span> integrations (OpenAI, Anthropic), <span class='bold'>RAG</span>, and <span class='bold'>tool/function calling</span>, backed by evaluation, guardrails, and cost/latency monitoring. Experienced in service-to-service API design, <span class='bold'>CI/CD</span>, and Agile/Scrum delivery in remote, cross-functional teams.",
 
   coreCompetencies: {
-    frontend: ["<span class='bold'>React.js</span>", "Next.js", "Responsive UI Development"],
-    languages: ["<span class='bold'>TypeScript</span>", "JavaScript (ES6+)"],
-    backend: ["Agentic AI Workflows (Multi-step Agents)", "MCP (Model Context Protocol)", "LLM Integration (OpenAI/Anthropic APIs)", "Tool/Function Calling", "RAG", "Data Pipelines", "RESTful APIs", "Service-to-Service Integrations", "API Development"],
-    backendFrameworks: ["Node.js", "Express.js"],
-    architecture: ["API-Driven Architecture", "AI-Assisted Workflows", "Scalable Systems Design", "Microservices", "Distributed Systems"],
-    databases: ["PostgreSQL", "MongoDB", "Relational Databases", "dbt (Familiarity)"],
-    cloud: ["AWS (EC2, S3, CloudFront)", "Azure", "Docker"],
-    devPractices: ["CI/CD Pipelines", "Agile/Scrum", "Team Leadership", "Mentoring", "AI-Assisted Development (Claude Code, Copilot, Cursor)", "Code Reviews", "Remote Collaboration"]
+    languages: [
+      "JavaScript (ES6+)",
+      "TypeScript",
+      "<span class='bold'>Ruby</span>",
+      "Python",
+      "Ruby"
+    ],
+
+    frontend: [
+      "React.js",
+      "Next.js",
+      "<span class='bold'>HTML</span>",
+      "<span class='bold'>CSS</span>",
+      "Responsive UI Development",
+      "Server-Side Rendering (SSR)",
+      "Stimulus",
+      "Webpack",
+      "HTML5/CSS3"
+    ],
+
+    backend: [
+      "<span class='bold'>Ruby on Rails</span>",
+      "Active Record", "Sidekiq", "Action Cable","HAM",
+      "<span class='bold'>RESTful APIs</span>",
+      "API Design",
+      "Application Performance Optimization",
+      "Node.js",
+      "Express.js",
+    ],
+
+    testing: ["RSpec", "Capybara", "Cucumber", "TDD", "BDD", "Unit / Integration / Functional Testing"],
+    aiAndAutomatoins: ["OpenAI/Claude/Gemini APIs", "AI Agents", "Agent Skills", "Claude Routines", "n8n"],
+    architecture: [
+      "Scalable Systems Design",
+      "Distributed Systems",
+      "Microservices",
+      "API-Driven Architecture",
+      "Kubernetes"
+    ],
+
+    cloud: [
+      "AWS (EC2, S3, CloudFront)",
+      "Docker",
+      "Cloud Deployment",
+      "Heroku",
+      "GitHub Actions CI/CD"
+    ],
+
+    databases: [
+      "PostgreSQL",
+      "MongoDB",
+      "Redis",
+      "SQLite",
+      "MySQL"
+    ],
+
+    devPractices: [
+      "Git",
+      "<span class='bold'>Code Reviews</span>",
+      "CI/CD",
+      "Unit Testing",
+      "<span class='bold'>Debugging & Troubleshooting</span>",
+      "Agile/Scrum",
+      "<span class='bold'>Remote Collaboration</span>"
+    ],
+
+    other: [
+      "Performance Optimization",
+      "Secure Application Development",
+      "System Monitoring"
+    ]
   },
 
   experience: [
     {
-      title: "Team Lead",
+      title: "Lead Software Engineer",
       company: "Rstack Labs",
       location: "Remote",
       period: "April 2026–Present",
@@ -49,55 +112,89 @@ export const BASE_RESUME = {
       company: "Mindjjo",
       location: "Coimbatore, Tamil Nadu | India",
       period: "April 2024–April 2026",
-      techStack: ["TypeScript", "Next.js", "Node.js", "PostgreSQL", "AWS", "Docker"],
+
+      techStack: [
+        "TypeScript",
+        "Next.js",
+        "Node.js",
+        "PostgreSQL",
+        "AWS",
+        "Docker"
+      ],
+
       bullets: [
-        "Designed and developed scalable backend services and RESTful APIs with <span class='bold'>TypeScript</span> and <span class='bold'>Node.js</span> for distributed web applications",
-        "Built modular, maintainable architecture for high-traffic SaaS applications using <span class='bold'>Next.js</span> and <span class='bold'>PostgreSQL</span>",
-        "Owned the full feature lifecycle, from architecture and implementation to deployment on <span class='bold'>AWS</span> with <span class='bold'>Docker</span>",
-        "Optimized backend services and PostgreSQL queries, reducing API response times by 40%",
-        "Resolved production issues and contributed to architecture decisions alongside product and engineering teams in Agile sprints"
+        "Architected and developed scalable backend services and <span class='bold'>RESTful APIs</span> supporting high-traffic SaaS applications",
+        "Implemented modular backend architecture inspired by <span class='bold'>Ruby on Rails</span>-style MVC patterns to improve maintainability",
+        "Optimized backend performance and database queries, reducing API response times by approximately 30%",
+        "Designed and deployed production-ready services using Node.js, PostgreSQL, and AWS infrastructure",
+        "Collaborated with distributed engineering teams in a <span class='bold'>fully remote development environment</span> to deliver high-quality product features",
+        "Led feature development end-to-end from system design to deployment and post-release monitoring",
+        "Conducted regular <span class='bold'>code reviews</span> and contributed to architectural decisions to maintain engineering quality"
       ]
     },
+
     {
       title: "Full Stack Developer",
       company: "Devsinc",
       location: "Lahore, Pakistan",
       period: "March 2022–April 2024",
-      techStack: ["TypeScript", "React.js", "Node.js", "MongoDB", "AWS"],
+
+      techStack: [
+        "TypeScript",
+        "React.js",
+        "Node.js",
+        "MongoDB",
+        "AWS"
+      ],
+
       bullets: [
-        "Built and maintained <span class='bold'>React.js</span> and <span class='bold'>TypeScript</span> user interfaces alongside <span class='bold'>Node.js</span> backend services",
-        "Implemented RESTful APIs and backend modules for new product features and third-party integrations",
-        "Improved API performance by 30% by optimizing logic and <span class='bold'>MongoDB</span> interactions",
-        "Shipped user-facing features with designers, product managers, and engineers, maintaining quality through code reviews and testing"
+        "Developed scalable web applications with a strong focus on <span class='bold'>backend development</span> and API architecture",
+        "Built and maintained production-grade <span class='bold'>RESTful APIs</span> used by web and mobile clients",
+        "Improved application reliability by identifying and resolving backend bottlenecks through systematic <span class='bold'>debugging</span> and performance tuning",
+        "Collaborated with cross-functional product and engineering teams to deliver high-impact features",
+        "Maintained clean, well-documented codebases while following modern engineering practices including <span class='bold'>code reviews</span>",
+        "Enhanced system scalability through optimized database queries and backend service refactoring"
       ]
     },
+
     {
       title: "Software Engineer",
       company: "Devsinc",
       location: "Lahore, Pakistan | Onsite",
       period: "March 2021–April 2022",
-      techStack: ["Node.js", "React", "Express", "PostgreSQL"],
+
+      techStack: [
+        "Node.js",
+        "React",
+        "Express",
+        "PostgreSQL"
+      ],
+
       bullets: [
-        "Developed RESTful APIs and endpoints with <span class='bold'>Node.js</span> and <span class='bold'>Express</span>, integrating <span class='bold'>React</span> components with <span class='bold'>PostgreSQL</span>-backed services",
-        "Took part in agile sprint planning, development, and peer code reviews"
+        "Developed backend services and APIs supporting scalable production web applications",
+        "Implemented frontend components using <span class='bold'>HTML</span>, <span class='bold'>CSS</span>, and JavaScript frameworks",
+        "Assisted in designing maintainable backend systems aligned with <span class='bold'>RESTful architecture</span>",
+        "Participated in sprint planning, collaborative development, and regular <span class='bold'>code reviews</span>",
+        "Troubleshot application issues and implemented fixes to improve overall system stability"
       ]
     }
+
   ],
 
   education: "BS Computer Science | Punjab University College of Information and Technology | 2017-2021",
 
   projects: [
     {
-name: "EduGuide AI",
-url: "https://www.cialfo.co/",
-description: "AI assistant and tool-calling backend for a K-12 student guidance platform (client project)",
-techStack: ["MCP", "TypeScript", "React", "CI/CD"],
-bullets: [
-"Built an <span class='bold'>MCP</span> (Model Context Protocol) tool-calling backend with 21 tools, role- and plan-based access control, safe error handling, and an audit log of every tool call",
-"Developed AI assistant chat interfaces in <span class='bold'>TypeScript</span> and Angular with streaming, resumable conversations, page-aware context, and dynamic UI cards",
-"Built <span class='bold'>CI/CD</span> and evaluation tooling: replay-based tests on pull requests, pre-commit security checks, and automated Sentry issue triage that drafts fixes"
-]
-},
+      name: "EduGuide AI",
+      url: "https://www.cialfo.co/",
+      description: "AI assistant and tool-calling backend for a K-12 student guidance platform (client project)",
+      techStack: ["MCP", "TypeScript", "Angular", "CI/CD"],
+      bullets: [
+        "Built an <span class='bold'>MCP</span> (Model Context Protocol) tool-calling backend with 21 tools, role- and plan-based access control, safe error handling, and an audit log of every tool call",
+        "Developed AI assistant chat interfaces in <span class='bold'>TypeScript</span> and Angular with streaming, resumable conversations, page-aware context, and dynamic UI cards",
+        "Built <span class='bold'>CI/CD</span> and evaluation tooling: replay-based tests on pull requests, pre-commit security checks, and automated Sentry issue triage that drafts fixes"
+      ]
+    },
     {
       name: "Mindjjo",
       url: "http://mindjjo.com",
